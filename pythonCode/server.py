@@ -19,7 +19,7 @@ def hello():
     #     for filename in files:
     #         debug(filename)
 
-    cmd = ["ls","-l"]
+    cmd = ["ls","sparkGIS"]
     p = subprocess.Popen(cmd, stdout = subprocess.PIPE,
                             stderr=subprocess.PIPE,
                             stdin=subprocess.PIPE)

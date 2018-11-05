@@ -1,4 +1,5 @@
 from flask import Flask
+import subprocess
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -6,8 +7,12 @@ app.url_map.strict_slashes = False
 
 @app.route('/', methods=[ 'GET'])
 def hello():
-    returnStatement = "Flask server running"
-    return returnStatement
+    cmd = ["ls","-l"]
+    p = subprocess.Popen(cmd, stdout = subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            stdin=subprocess.PIPE)
+    out,err = p.communicate()
+    return out
 
 
 if __name__ == "__main__":

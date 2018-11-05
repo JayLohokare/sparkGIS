@@ -16,27 +16,27 @@ echo "****** REQUIRES ROOT PRIVILEGES ******"
 echo "If you donot have root privileges, ask your admin to install gcc, g++, cmake and java. Run setup_spatial_libs_from_source.sh afterwards"
 
 # Setup gcc & g++
-sudo apt-get install gcc
-sudo apt-get install g++
+sudo apt-get install gcc -y
+sudo apt-get install g++ -y
 
 # Setup cmake
-sudo apt-get install cmake
+sudo apt-get install cmake -y
 
 # Setup ssh
 echo "$(tput setaf 2)Setting up ssh ...$(tput sgr 0)"
-sudo apt-get install openssh-server
+sudo apt-get install openssh-server -y
 #ssh-keygen
 #ssh-copy-id -i ~/.ssh/id_rsa.pub localhost
 echo "$(tput setaf 2)Done ... $(tput sgr 0)"
 
 # Setup Java
 echo "$(tput setaf 2)Setting up Java ...$(tput sgr 0)"
-sudo apt-get install openjdk-8-jdk
+sudo apt-get install openjdk-8-jdk -y
 echo "$(tput setaf 2)Done ... $(tput sgr 0)"
 
 # setup dependencies GEOS & SpatialIndex
-sudo apt-get install libgeos++-dev
-sudo apt-get install libspatialindex-dev
+sudo apt-get install libgeos++-dev -y
+sudo apt-get install libspatialindex-dev -y
 
 echo "export SPGIS_INC_PATH=/usr/include">>~/.bashrc
 echo "export SPGIS_LIB_PATH=/usr/lib">>~/.bashrc

@@ -1,5 +1,8 @@
 FROM python:3.4-alpine
-ADD /pythonCode /code
-WORKDIR /code
+ADD /pythonCode /pythonCode
+WORKDIR /pythonCode
+
 RUN pip install -r requirements.txt
-CMD ["python", "app.py"]
+
+
+CMD ["gunicorn", "--workers=2", "--bind=0.0.0.0:8000", "server:app"]

@@ -35,7 +35,7 @@ RUN apt-get install -y curl \
       && cd /
 
 
-ENV  SPARK_HOME=spark/
+ENV  SPARK_HOME=spark
 ENV  SPGIS_INC_PATH=/usr/include
 ENV  SPGIS_LIB_PATH=/usr/lib
 ENV  LD_CONFIG_PATH=${LD_LIBRARY_PATH}:${SPGIS_LIB_PATH}
@@ -45,7 +45,6 @@ WORKDIR /pythonCode
 RUN apt-get install -y python3 python3-setuptools python3-pip
 
 ADD /sparkGIS /pythonCode/sparkGIS
-
 RUN sh sparkGIS/deploy/setup_spatial_libs_from_source.sh -y
 
 WORKDIR /pythonCode/sparkGIS
@@ -55,13 +54,18 @@ ENV  JAVA_INCLUDE_DIR=/usr/lib/jvm/java-8-openjdk-amd64/include
 RUN sh compile.sh
 
 
-
 WORKDIR /pythonCode
-
 ADD /pythonCode /pythonCode
 RUN pip3 install -r requirements.txt
-
 RUN  echo "${PATH}"
 CMD [ "gunicorn", "--workers=2", "--bind=0.0.0.0:8000", "server:app"]
+
+
+WORKDIR /spark
+ADD slaves conf/slaves
+ADD spark-defaults.conf conf/spark-defaults.conf
+RUN sh ${SPARK_HOME}/sbin/start-all.sh
+
+
 
 #Run docker-compose up --build

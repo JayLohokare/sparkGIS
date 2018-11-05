@@ -17,7 +17,6 @@ RUN apt-get update && \
   apt-get install -y --no-install-recommends oracle-java8-installer oracle-java8-set-default && \
   apt-get clean all
 
-ADD /pythonCode /pythonCode
 ADD /sparkGIS /pythonCode/sparkGIS
 
 WORKDIR /pythonCode
@@ -39,6 +38,10 @@ RUN apt-get install  -y python3 python3-setuptools python3-pip
 
 RUN pip3 install -r requirements.txt
 
+ENV SPARK_HOME=spark/
+
+
+ADD /pythonCode /pythonCode
 
 CMD ["gunicorn", "--workers=2", "--bind=0.0.0.0:8000", "server:app"]
 

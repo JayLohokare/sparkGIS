@@ -1,12 +1,16 @@
-#Creating the SparkGIS+Flask image from project
+**Spark GIS docker image**
+```
 docker build . -t jaylohokare/sparkgis:0.1
 docker push jaylohokare/sparkgis:0.1
+```
 
-#Run SparkGIS + Flask + Flask (Using previously created image)
+Docker Hub - https://hub.docker.com/r/jaylohokare/sparkgis/
+
+
+Using the image for hosted service (Flask server):
+```
 cd run
 docker-compose up --build
+```
 
-
-Following was changed:
-1. conf/sparkgis.properies
-2. deploy/setup_spatial_libs_from_source.sh (Added -y)
+The service uses sparkgis docker image, along with hadoop (For HDFS), Spark (Master) and Spark (Worker) images

@@ -26,7 +26,7 @@ RUN apt-get install gcc -y && \
   add-apt-repository ppa:george-edison55/cmake-3.x -y &&\
   apt-get install cmake -y
 
-
+WORKDIR /pythonCode
 RUN apt-get install -y curl \
       && wget http://apache.mirror.iphh.net/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
       && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
@@ -35,7 +35,7 @@ RUN apt-get install -y curl \
       && cd /
 
 
-ENV  SPARK_HOME=spark
+ENV  SPARK_HOME=/pythonCode/spark
 ENV  SPGIS_INC_PATH=/usr/include
 ENV  SPGIS_LIB_PATH=/usr/lib
 ENV  LD_CONFIG_PATH=${LD_LIBRARY_PATH}:${SPGIS_LIB_PATH}
@@ -53,18 +53,20 @@ ENV  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 ENV  JAVA_INCLUDE_DIR=/usr/lib/jvm/java-8-openjdk-amd64/include
 RUN sh compile.sh
 
+RUN apt-get install ssh
+RUN ls 
 
-WORKDIR /pythonCode
-ADD /pythonCode /pythonCode
+# ADD slaves conf/slaves
+# ADD spark-defaults.conf conf/spark-defaults.conf
+# WORKDIR ${SPARK_HOME}
+# RUN sh sbin/start-all.sh
+
+ADD /pythonCode /pythonCode/web/
+WORKDIR /pythonCode/web
 RUN pip3 install -r requirements.txt
 RUN  echo "${PATH}"
-CMD [ "gunicorn", "--workers=2", "--bind=0.0.0.0:8000", "server:app"]
+CMD [ "gunicorn", "--workers=2", "--bind=0.0.0.0:5000", "server:app"]
 
-
-WORKDIR /spark
-ADD slaves conf/slaves
-ADD spark-defaults.conf conf/spark-defaults.conf
-RUN sh ${SPARK_HOME}/sbin/start-all.sh
 
 
 

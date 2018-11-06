@@ -1,1 +1,1 @@
-Changed deploy/ubuntu_setup_dependencies.sh
+docker-compose up --build

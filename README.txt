@@ -1,4 +1,5 @@
-**Spark GIS docker image**
+*Spark GIS docker image*
+
 ```
 docker build . -t jaylohokare/sparkgis:0.1
 docker push jaylohokare/sparkgis:0.1

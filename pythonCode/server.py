@@ -1,6 +1,6 @@
 from __future__ import print_function # In python 2.7
 
-from flask import Flask
+from flask import Flask, request
 import subprocess
 import logging
 import os
@@ -18,10 +18,35 @@ client_hdfs = InsecureClient('http://'+ hdfsLocation)
 def debug(string):
     app.logger.debug (string)    
 
+@app.route('/uploader', methods=[ 'POST'])
+def upload():
+    
+    #/sparkgis/sample_data/
+    name = request.form.get('name')
+    f = request.files['file']
+    f.save("tmp/" + str(name))
+
+    client_hdfs.upload("/sparkgis/sample_data/" + str(name), "tmp/" + str(name))
+    
+    return 'File uploaded at ' +  "tmp/" + str(name)
 
 
-@app.route('/', methods=[ 'GET'])
-def hello():
+@app.route('/delete', methods=[ 'GET'])
+def delete():
+    try:
+        client_hdfs.delete("/sparkgis/", True)
+    except:
+        pass
+    try:
+        client_hdfs.delete("/results/", True)
+    except:
+        pass
+
+    return "Success"
+
+
+@app.route('/run', methods=[ 'GET'])
+def run():
     try:
         client_hdfs.delete("/sparkgis", True)
     except:
@@ -30,7 +55,6 @@ def hello():
         client_hdfs.delete("/results", True)
     except:
         pass
-    client_hdfs.upload("/sparkgis/sample_data/algo-v1/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo1-TCGA-02-0007-01Z-00-DX1")
     client_hdfs.upload("/sparkgis/sample_data/algo-v2/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo2-TCGA-02-0007-01Z-00-DX1") 
 
     subprocess.call(['../sparkGIS/scripts/generate_heatmap.sh'])
@@ -40,18 +64,8 @@ def hello():
     debug("*********************************************************************************************************")
 
     shutil.make_archive('results', 'zip', '/tmp')
-    
-    cmd = ["ls","-l"]
-    p = subprocess.Popen(cmd, stdout = subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            stdin=subprocess.PIPE)
-    out,err = p.communicate() 
-    out = str(out)
-    out = out.split('\\n')
-    for i in out:
-        debug(i + '\n')
 
-    return send_file('results.zip', attachment_filename="results.zip")
+    return "Success"
     
     
 

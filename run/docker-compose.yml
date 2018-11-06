@@ -28,3 +28,5 @@ services:
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
   
+
+  

@@ -22,13 +22,13 @@ def debug(string):
 def upload():
     
     #/sparkgis/sample_data/
-    name = request.form.get('name')
+    loc = request.form.get('name')
     f = request.files['file']
-    f.save("tmp/" + str(name))
+    f.save("tmp/file")
 
-    client_hdfs.upload("/sparkgis/sample_data/" + str(name), "tmp/" + str(name))
+    client_hdfs.upload(str(loc), "../web/tmp/file")
     
-    return 'File uploaded at ' +  "tmp/" + str(name)
+    return 'File uploaded at ' +  str(loc)
 
 
 @app.route('/delete', methods=[ 'GET'])
@@ -47,24 +47,7 @@ def delete():
 
 @app.route('/run', methods=[ 'GET'])
 def run():
-    try:
-        client_hdfs.delete("/sparkgis", True)
-    except:
-        pass
-    try:
-        client_hdfs.delete("/results", True)
-    except:
-        pass
-    client_hdfs.upload("/sparkgis/sample_data/algo-v2/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo2-TCGA-02-0007-01Z-00-DX1") 
-
-    subprocess.call(['../sparkGIS/scripts/generate_heatmap.sh'])
-    
-    client_hdfs.download('/results', '/tmp', overwrite=True, n_threads=1)
-    
-    debug("*********************************************************************************************************")
-
-    shutil.make_archive('results', 'zip', '/tmp')
-
+    subprocess.call(['../sparkGIS/scripts/generate_heatmap.sh'])   
     return "Success"
     
     

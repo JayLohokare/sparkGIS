@@ -3,7 +3,7 @@ docker build . -t jaylohokare/sparkgis:0.1
 docker push jaylohokare/sparkgis:0.1
 
 #Run SparkGIS + Flask + Flask (Using previously created image)
-cd Run
+cd run
 docker-compose up --build
 
 

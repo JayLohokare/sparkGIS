@@ -16,4 +16,7 @@ SparkGIS service run instructions
 5. http://192.168.99.100:50070/explorer.html#/
     The results should be in results folder!
 
-    
+6. End points :
+    /delete
+    /run
+    /uploader (upload.html)

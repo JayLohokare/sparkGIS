@@ -20,19 +20,19 @@ def debug(string):
 
 @app.route('/', methods=[ 'GET'])
 def hello():
-    try:
-        client_hdfs.upload("/sparkgis/sample_data/algo-v1/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo1-TCGA-02-0007-01Z-00-DX1")
-        client_hdfs.upload("/sparkgis/sample_data/algo-v2/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo2-TCGA-02-0007-01Z-00-DX1") 
-    except:
-        pass
+    client_hdfs.delete("/sparkgis/", True)
+    client_hdfs.delete("/results/", True)
+    client_hdfs.upload("/sparkgis/sample_data/algo-v1/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo1-TCGA-02-0007-01Z-00-DX1")
+    client_hdfs.upload("/sparkgis/sample_data/algo-v2/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo2-TCGA-02-0007-01Z-00-DX1") 
+
     subprocess.call(['../sparkGIS/scripts/generate_heatmap.sh'])
     
-    client.download('/results', 'tmp/', n_threads=5)
-
-    shutil.make_archive('results.zip', 'zip', 'tmp/')
+    client_hdfs.download('/results/', '/tmp', overwrite=True, n_threads=1)
+    debug("*********************************************************************************************************")
+    shutil.make_archive('results.zip', 'zip', '/tmp')
     
     try:
-        return send_file('results.zip', as_attachment=True)
+        return send_from_directory(directory='/', filename='results.zip')
     except Exception as e:
         self.log.exception(e)
         self.Error(400)

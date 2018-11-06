@@ -54,12 +54,7 @@ ENV  JAVA_INCLUDE_DIR=/usr/lib/jvm/java-8-openjdk-amd64/include
 RUN sh compile.sh
 
 RUN apt-get install ssh
-RUN ls 
-
-# ADD slaves conf/slaves
-# ADD spark-defaults.conf conf/spark-defaults.conf
-# WORKDIR ${SPARK_HOME}
-# RUN sh sbin/start-all.sh
+RUN ls
 
 ADD /pythonCode /pythonCode/web/
 WORKDIR /pythonCode/web

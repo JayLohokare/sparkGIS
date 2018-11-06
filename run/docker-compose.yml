@@ -16,6 +16,7 @@ services:
     container_name: hdfs
     ports:
       - "50070:50070"
+      - "50075:50075"
       - "8020:8020"
   spark-worker-1:
     image: bde2020/spark-worker:2.3.2-hadoop2.7

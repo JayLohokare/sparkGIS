@@ -4,33 +4,38 @@ from flask import Flask
 import subprocess
 import logging
 import os
+from hdfs import InsecureClient
+import shutil
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.url_map.strict_slashes = False
 
+hdfsLocation = "hdfs:50070"
+client_hdfs = InsecureClient('http://'+ hdfsLocation)
+
 def debug(string):
     app.logger.debug (string)    
 
 @app.route('/', methods=[ 'GET'])
 def hello():
-    # for root, dirs, files in os.walk("."):  
-    #     for filename in files:
-    #         debug(filename)
-
-    cmd = ["ls","sparkGIS"]
-    p = subprocess.Popen(cmd, stdout = subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            stdin=subprocess.PIPE)
-    out,err = p.communicate()
+    try:
+        client_hdfs.upload("/sparkgis/sample_data/algo-v1/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo1-TCGA-02-0007-01Z-00-DX1")
+        client_hdfs.upload("/sparkgis/sample_data/algo-v2/TCGA-02-0007-01Z-00-DX1", "../sparkGIS/deploy/sample_pia_data/Algo2-TCGA-02-0007-01Z-00-DX1") 
+    except:
+        pass
+    subprocess.call(['../sparkGIS/scripts/generate_heatmap.sh'])
     
-    out = str(out)
-    out = out.split('\\n')
-    for i in out:
-        debug(i + '\n')
-    s = ""
-    return s
+    client.download('/results', 'tmp/', n_threads=5)
+
+    shutil.make_archive('results.zip', 'zip', 'tmp/')
+    
+    try:
+        return send_file('results.zip', as_attachment=True)
+    except Exception as e:
+        self.log.exception(e)
+        self.Error(400)
     
 
 if __name__ == "__main__":

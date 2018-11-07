@@ -44,6 +44,12 @@ ENV  LD_LIBRARY_PATH=${LD_CONFIG_PATH}
 WORKDIR /pythonCode      
 RUN apt-get install -y python3 python3-setuptools python3-pip
 
+
+WORKDIR /spark
+ADD slaves conf/slaves
+ADD spark-defaults.conf conf/spark-defaults.conf
+
+
 ADD /sparkGIS /pythonCode/sparkGIS
 RUN sh sparkGIS/deploy/setup_spatial_libs_from_source.sh -y
 

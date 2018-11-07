@@ -45,10 +45,12 @@ WORKDIR /pythonCode
 RUN apt-get install -y python3 python3-setuptools python3-pip
 
 
-WORKDIR /spark
-ADD slaves conf/slaves
-ADD spark-defaults.conf conf/spark-defaults.conf
+WORKDIR /pythonCode/spark
+ADD slaves /pythonCode/spark/conf/slaves
+ADD spark-defaults.conf /pythonCode/spark/conf/spark-defaults.conf
 
+
+WORKDIR /pythonCode  
 
 ADD /sparkGIS /pythonCode/sparkGIS
 RUN sh sparkGIS/deploy/setup_spatial_libs_from_source.sh -y

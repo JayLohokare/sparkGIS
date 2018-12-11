@@ -22,3 +22,5 @@ This repo contains:
 3. Flask REST service that provides web-interface for SparkGIS
 4. Docker compose file for starting SparkGIS, spark cluster and HDFS cluster
 
+
+Open webApp/index.html to access the web interface

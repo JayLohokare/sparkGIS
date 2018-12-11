@@ -20,3 +20,7 @@ SparkGIS service run instructions
     /delete
     /run
     /uploader (upload.html)
+
+
+
+Alternative interface (all in one web app to upload data, configure the script parameters,  view results)
